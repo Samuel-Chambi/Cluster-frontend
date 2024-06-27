@@ -5,7 +5,7 @@ USE inverted_index;
 -- Crear la tabla externa para leer archivos desde el directorio
 DROP TABLE IF EXISTS external_docs;
 CREATE EXTERNAL TABLE external_docs(line STRING)
-LOCATION 's3://aws-logs-888525559191-us-east-1/corpus';
+LOCATION 'hdfs://ip-172-31-26-142.ec2.internal:8020/corpus';
 
 -- Crear la tabla 'docs' con columnas para file_id, line_number y contenido de la línea
 DROP TABLE IF EXISTS docs;
@@ -38,7 +38,7 @@ GROUP BY word, file_id
 ORDER BY word, file_id;
 
 -- Guardar la salida de 'inverted_index' en S3
-INSERT OVERWRITE DIRECTORY 'hdfs://ip-172-31-18-61.ec2.internal:8020/user/hadoop/logs'
+INSERT OVERWRITE DIRECTORY 'hdfs://ip-172-31-26-142.ec2.internal:8020/user/hadoop/logs'
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
 SELECT * FROM inverted_index;

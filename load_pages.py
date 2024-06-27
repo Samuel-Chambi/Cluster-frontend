@@ -10,18 +10,19 @@ def hashmap_pagerank():
 	for line in f:
 		row = line.split('\t')
 		hmap_pr[row[0]] = row[1].rstrip('\n')
-
+	print("PAGE RANK DICT:", hmap_pr)
 	return hmap_pr
 
 def hashmap():
 	words = {}
 
-	f = open('part-00000', 'r')
+	f = open('000000_0', 'r')
 
 	for line in f:
 		row = line.split('\t')
-		words[row[0]] = [w.split(':')[0] for w in row[1].split(',')]
-
+		if len(row) > 1:
+			words.setdefault(row[0], []).append(row[1][:-1])
+	print("WORDS: ", words)
 	return words
 
 inverted_index = hashmap()	
@@ -45,4 +46,4 @@ def search_query(value):
 
 		return result
 
-	return []			
+	return []
