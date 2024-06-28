@@ -5,28 +5,29 @@ porter=PorterStemmer()
 def hashmap_pagerank():
 	hmap_pr = {}
 
-	f = open('part-00001', 'r')
+	f = open('part-000002', 'r')
 
 	for line in f:
 		row = line.split('\t')
 		hmap_pr[row[0]] = row[1].rstrip('\n')
-	print("PAGE RANK DICT:", hmap_pr)
+	#print("PAGE RANK DICT:", hmap_pr)
+	print(len(hmap_pr))
 	return hmap_pr
 
 def hashmap():
 	words = {}
 
-	f = open('000000_0', 'r')
+	f = open('000000_1', 'r')
 
 	for line in f:
 		row = line.split('\t')
 		if len(row) > 1:
 			words.setdefault(row[0], []).append(row[1][:-1])
-	print("WORDS: ", words)
+#	print("WORDS: ", words)
 	return words
 
 inverted_index = hashmap()	
-	
+
 def search_query(value):
 
 	words = []

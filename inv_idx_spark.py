@@ -6,7 +6,7 @@ conf = SparkConf().setAppName("Better_Inverted_Index")
 sc = SparkContext(conf=conf)
 
 # Ruta de entrada en HDFS
-hdfs_input = 'hdfs://ip-172-31-26-142.ec2.internal:8020/corpus'
+hdfs_input = 'hdfs://ip-172-31-25-107.ec2.internal:8020/corpus'
 
 # Leer archivos de entrada y crear un RDD de pares (nombre de archivo, contenido)
 text_files = sc.wholeTextFiles(hdfs_input)
@@ -30,19 +30,23 @@ def sort_documents(documents):
 sorted_word_docs = word_sorted_docs.mapValues(sort_documents)
 
 # Obtener los primeros 5 resultados
-output = sorted_word_docs.take(5)
+output = sorted_word_docs.take(100)
 
-# Imprimir los resultados
+# Formatea los resultados para guardar en HDFS
+lines_to_save = []
 for (word, documents) in output:
-    document_strings = [f"{word_count} {doc}" for doc, word_count in documents]
-    documents_line = ', '.join(document_strings)
+    for doc, word_count in documents:
+        line = f"{word}\t{hdfs_input}/{doc}"
+        lines_to_save.append(line)
+#    document_strings = [f"{word_count} {doc}" for doc, word_count in documents]
+#    documents_line = ', '.join(document_strings)
    # print(f"{word} {documents_line}")
 
 # Ruta de salida en HDFS
-hdfs_output = 'hdfs://ip-172-31-26-142.ec2.internal:8020/user/hadoop/logs_spark2'
+hdfs_output = 'hdfs://ip-172-31-25-107.ec2.internal:8020/user/hadoop/logs_spark3'
 
 # Guardar la salida como archivos de texto
-output_bii = sc.parallelize(output)
+output_bii = sc.parallelize(lines_to_save)
 output_bii.saveAsTextFile(hdfs_output) 
 
 # Detener Spark
